@@ -38,9 +38,11 @@ const mainMenu = () => {
               // Run a function that executes a department Query
           } else if (data.options === 'View All Roles') {
               console.log('Option 2');
+              viewAllRoles();
               // Run a function that executes a role Query
           } else if (data.options === 'View All Employees') {
               console.log('Option 3');
+              viewAllEmployees();
               // Run a function that executes an employee Query
           } else if (data.options === 'Add a Department') {
               console.log('Option 4');
@@ -65,13 +67,17 @@ const viewAllDepartments = () => {
     mainMenu();
 };
 
-// function viewRole = () => {
-  
-// };
+const viewAllRoles = () => {
+    let allRoles = db.query('SELECT * FROM role')
+    console.log(allRoles);
+    mainMenu();
+};
 
-// function viewEmployee = () => {
-  
-// };
+const viewAllEmployees= () => {
+    let allEmps = db.query('SELECT * FROM employee')
+    console.log(allEmps);
+    mainMenu();
+};
 
 // function addDepartment = () => {
   
