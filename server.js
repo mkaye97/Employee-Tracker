@@ -34,6 +34,7 @@ const mainMenu = () => {
 
           if (data.options === 'View All Departments') {
               console.log('Option 1');
+              viewAllDepartments();
               // Run a function that executes a department Query
           } else if (data.options === 'View All Roles') {
               console.log('Option 2');
@@ -58,17 +59,11 @@ const mainMenu = () => {
       )
 };
 
-// function viewDepartment = () => {
-//     inquirer
-//         .prompt([
-//             {
-//                 type: 'list',
-//                 message: 'Welcome to the employee management interface. Please select what you would like to do.',
-//                 name: 'options',
-//                 choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role']
-//             }
-//         ])
-// };
+const viewAllDepartments = () => {
+    let allDept = db.query('SELECT * FROM department')
+    console.log(allDept);
+    mainMenu();
+};
 
 // function viewRole = () => {
   
