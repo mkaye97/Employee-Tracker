@@ -1,43 +1,44 @@
 USE kaye_corporation_db;
 
-INSERT INTO  department (id, name)
-VALUES (001, "Development"),
-       (002, "Marketing"),
-       (003, "Accounting"),
-       (004, "Public Relations"),
-       (005, "Customer Service"),
-       (006, "Human Resources");
+INSERT INTO  department (name)
+VALUES ("Development"),
+       ("Marketing"),
+       ("Accounting"),
+       ("Customer Service"),
+       ("Human Resources");
 
 INSERT INTO  role (id, title, salary, department_id)
-VALUES (59443, "Engineer", 1.40, 001),
-       (92042, "Engineer", 1.22, 001),
-       (47448, "Manager", 1.32, 002),
-       (94633, "Marketing Rep", 1.01, 002),
-       (60388, "PR Rep", 1.13, 004),
-       (37488, "Manager", 1.37, 003),
-       (19334, "Manager", 1.71, 001),
-       (64733, "Manager", 1.43, 006),
-       (78447, "Accountant", 1.13, 003),
-       (12155, "PR Rep", 1.17, 003),
-       (19768, "Customer Service Rep", .91, 005),
-       (88495, "HR Officer", 1.01, 006),
-       (44378, "Customer Service Rep", .86, 005),
-       (11093, "Manager", .95, 005),
-       (40103, "Accountant", 1.20, 003),
-       (77547, "Customer Service Rep", .79),
-       (58944, "Manager", 1.15, 004),
-       (66574, "Customer Service Rep", .90, 005),
-       (27794, "HR Officer", 1.01, 006);
+VALUES (1, "Engineer", 1.40, 1),
+       (2, "Marketing Rep", 1.01, 2),
+       (3, "Accountant", 1.13, 3),
+       (4, "CS Rep", 1.32, 4),
+       (5, "HR Rep", 1.13, 5)
+       (6, "Project Manager", 1.40, 1),
+       (7, "Marketing Manager", 1.01, 2),
+       (8, "Controller", 1.13, 3),
+       (9, "Customer Service Manager", 1.32, 4),
+       (10, "Human Resources Manager", 1.13, 5);
 
--- INSERT INTO  employee (id, title, salary, department_id)
--- VALUES (59443, "Engineer", 1.40, 001),
---        (92042, "Engineer", 1.22, 001),
---        (47448, "Manager", 1.32, 002),
---        (94633, "Marketing Rep", 1.01, 002),
---        (60388, "PR Rep", 1.13, 004),
---        (37488, "Manager", 1.37, 003),
---        (19334, "Manager", 1.71, 001),
---        (64733, "Manager", 1.43, 006),
---        (78447, "Accountant", 1.13, 003);
-
-
+INSERT INTO  employee (id, first_name, last_name, role_id, manager_id)
+VALUES (318,"John", "Appleseed" 1, 926),
+       (679 , "Claud", "Dulcibella" 1, 926),
+       (842 ,"Manuela", "Gertraud" 2, 715),
+       (703 ,"Ottmar", "Doyle" 2, 715),
+       (633 ,"Tyrone", "Evangelista" 3, 263),
+       (437 ,"Promise", "Varlaam" 3, 263),
+       (279 ,"Aiden", "Charissa" 4, 439),
+       (885 ,"Aleksey", "Nigella" 4, 439),
+       (212 ,"Valarie", "Zavanna" 5, 581),
+       (197 ,"Remington", "Mitya" 5, 581),
+       (926 ,"Cloe", "Nioclás" 6, NULL),
+       (715 ,"Dmitriy", "Georgeanna" 7, NULL),
+       (263 ,"Alyonka", "Gunner" 8, NULL),
+       (439 ,"Algar", "Val" 9, NULL),
+       (581 ,"Rebecca", "Reynold" 10, NULL),
+       (364 ,"Mary", "Zola" 1, 926),
+       (222 ,"Palmira", "Matilde" 1, 926),
+       (775 ,"Dwayne", "Joseph" 1, 926),
+       (669 ,"Xander", "Ryland" 2, 715),
+       (927 ,"Emmanuele", "Val" 4, 439),
+       (306 ,"Esfir", "Alya" 5, 581),
+       (582 ,"Jason", "Erma" 2, 715);
