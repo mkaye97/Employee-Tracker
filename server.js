@@ -1,8 +1,8 @@
 const express = require('express');
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
+const consoleTable = require('console.table');
 
-const PORT = process.env.PORT || 3001;
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
@@ -18,7 +18,7 @@ const db = mysql.createConnection(
   console.log(`Connected to the kaye_corporation_db database.`)
 );
 
-
+db.connect();
 
 const mainMenu = () => {
   inquirer
@@ -62,25 +62,43 @@ const mainMenu = () => {
 };
 
 const viewAllDepartments = () => {
-    let allDept = db.query('SELECT * FROM department')
-    console.log(allDept);
+    let allDept = 'SELECT * FROM department'
+    db.query(allDept, (err, res) => {
+        if (res) {
+            console.table(res);
+        } else {
+            console.log(err)
+        }
+    })
     mainMenu();
 };
 
 const viewAllRoles = () => {
-    let allRoles = db.query('SELECT * FROM role')
-    console.log(allRoles);
+    let allRoles = 'SELECT * FROM role'
+    db.query(allRoles, (err, res) => {
+        if (res) {
+            console.table(res);
+        } else {
+            console.log(err)
+        }
+    })
     mainMenu();
 };
 
-const viewAllEmployees= () => {
-    let allEmps = db.query('SELECT * FROM employee')
-    console.log(allEmps);
+const viewAllEmployees = () => {
+    let allEmps = 'SELECT * FROM employee'
+    db.query(allEmps, (err, res) => {
+        if (res) {
+            console.table(res);
+        } else {
+            console.log(err)
+        }
+    })
     mainMenu();
 };
 
 // function addDepartment = () => {
-  
+    
 // };
 
 // function addRole = () => {
@@ -94,9 +112,5 @@ const viewAllEmployees= () => {
 // function updateRole = () => {
   
 // };
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
 
 mainMenu();
