@@ -63,12 +63,14 @@ const viewAllDepartments = () => {
         if (res) {
             console.log('\n');
             console.table(res);
+            console.log('\n');
+            mainMenu();
         } else {
             console.log(err);
-            console.log("Use the 'Up' or 'Down' Arrow Key to Return to the main menu...");
+            console.log('\n');
+            mainMenu();
         }
     })
-    mainMenu();
 };
 
 const viewAllRoles = () => {
@@ -76,12 +78,14 @@ const viewAllRoles = () => {
         if (res) {
             console.log('\n');
             console.table(res);
+            console.log('\n');
+            mainMenu();
         } else {
             console.log(err);
-            console.log("Use the 'Up' or 'Down' Arrow Key to Return to the main menu...");
+            console.log('\n');
+            mainMenu();
         }
     })
-    mainMenu();
 };
 
 const viewAllEmployees = () => {
@@ -89,12 +93,15 @@ const viewAllEmployees = () => {
         if (res) {
             console.log('\n');
             console.table(res);
+            console.log('\n');
+            mainMenu();
         } else {
             console.log(err)
             console.log("Use the 'Up' or 'Down' Arrow Key to Return to the main menu...");
+            console.log('\n');
+            mainMenu();
         }
     })
-    mainMenu();
 };
 
 const addDepartment = () => {
@@ -107,18 +114,21 @@ const addDepartment = () => {
             },
         ])
         .then((data) => {
-            const newDeptName = data.newDeptName;
             db.query('INSERT INTO department SET ?', {
-                name: newDeptName
+                name: data.newDeptTitle
             }, (err, res) => {
                 if (res) {
+                    console.log('\n');
                     console.log('Successfully added the new department to the database!');
+                    console.log('\n');
+                    mainMenu();
                 } else {
                     console.log(err);
                     console.log("Use the 'Up' or 'Down' Arrow Key to Return to the main menu...");
+                    console.log('\n');
+                    mainMenu();
                 }
             });
-            mainMenu();
         })
 };
 
@@ -156,20 +166,73 @@ const addRole = (departmentChoices) => {
                 department_id: data.newRoleDept
             }, (err, res) => {
                 if (res) {
+                    console.log('\n');
                     console.log('Successfully added the new Role to the database!');
+                    console.log('\n');
+                    mainMenu();
                 } else {
+                    console.log('\n');
                     console.log(err);
-                    console.log("Use the 'Up' or 'Down' Arrow Key to Return to the main menu...");
-
+                    console.log('\n');
+                    mainMenu();
                 }
             });
-            mainMenu();
         })
 };
 
-// function addEmployee = () => {
-
-// };
+const addEmployee = (roleChoices, managerChoices) => {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                message: 'Please enter the ID of the new employee.',
+                name: 'newEmpId',
+            },
+            {
+                type: 'input',
+                message: 'Please enter the title of the new role.',
+                name: 'newEmpFirstName',
+            },
+            {
+                type: 'input',
+                message: 'Please enter the salary of employees holding this role.',
+                name: 'newEmpLastName',
+            },
+            {
+                type: 'list',
+                message: 'Please enter the Department ID this role exists within.',
+                choices: departmentChoices,
+                name: 'newEmpRole',
+            },
+            {
+                type: 'list',
+                message: 'Please enter the Department ID this role exists within.',
+                choices: departmentChoices,
+                name: 'newEmpManager',
+            }
+        ])
+        .then((data) => {
+            db.query('INSERT INTO employee SET ?', {
+                id: data.newEmpId,
+                first_name: data.newEmpFirstName,
+                last_name: data.newEmpLastName,
+                role_id: data.newEmpRole,
+                manager_id: data.newEmpManager
+            }, (err, res) => {
+                if (res) {
+                    console.log('\n');
+                    console.log('Successfully added the new employee to the database!');
+                    console.log('\n');
+                    mainMenu();
+                } else {
+                    console.log('\n');
+                    console.log(err);
+                    console.log('\n');
+                    mainMenu();
+                }
+            });
+        })
+};
 
 // function updateRole = () => {
 
@@ -183,6 +246,32 @@ const deptOptions = () => {
                 value: id
             }));
             addRole(depts)
+        } else {
+            console.log(err);
+            mainMenu()
+        }
+    })
+};
+
+const roleAndManagerOptions = () => {
+    db.query('SELECT * FROM role', (err, res) => {
+        if (res) {
+            const roles = res.map(({ id, title }) => ({
+                name: title,
+                value: id
+            }));
+        } else {
+            console.log(err);
+            mainMenu()
+        }
+    })
+
+    db.query('SELECT * FROM employee', (err, res) => {
+        if (res) {
+            const roles = res.map(({ id, first_name, last_name }) => ({
+                name: `${last_name}, ${first_name}`,
+                value: id
+            }));
         } else {
             console.log(err);
             mainMenu()
