@@ -48,7 +48,7 @@ const mainMenu = () => {
                 deptOptions();
                 // Run a function that asks for the department info and inserts into the appropriate table
             } else if (data.options === 'Add an Employee') {
-                console.log('Option 6');
+                roleAndManagerOptions();
                 // Run a function that executes a department Query
             } else if (data.options === 'Update an Employee Role') {
                 console.log('Option 7');
@@ -201,13 +201,13 @@ const addEmployee = (roleChoices, managerChoices) => {
             {
                 type: 'list',
                 message: 'Please enter the Department ID this role exists within.',
-                choices: departmentChoices,
+                choices: roleChoices,
                 name: 'newEmpRole',
             },
             {
                 type: 'list',
                 message: 'Please enter the Department ID this role exists within.',
-                choices: departmentChoices,
+                choices: managerChoices,
                 name: 'newEmpManager',
             }
         ])
@@ -254,29 +254,34 @@ const deptOptions = () => {
 };
 
 const roleAndManagerOptions = () => {
+    let roles;
+    let employees;
     db.query('SELECT * FROM role', (err, res) => {
         if (res) {
-            const roles = res.map(({ id, title }) => ({
+            roles = res.map(({ id, title }) => ({
                 name: title,
                 value: id
             }));
         } else {
             console.log(err);
+
             mainMenu()
         }
     })
 
     db.query('SELECT * FROM employee', (err, res) => {
         if (res) {
-            const roles = res.map(({ id, first_name, last_name }) => ({
+            employees = res.map(({ id, first_name, last_name }) => ({
                 name: `${last_name}, ${first_name}`,
                 value: id
             }));
         } else {
             console.log(err);
+            console.log('\n');
             mainMenu()
         }
     })
+    addEmployee(roles, employees);
 };
 
 mainMenu();
