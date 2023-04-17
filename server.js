@@ -159,7 +159,7 @@ const addRole = (departmentChoices) => {
             }
         ])
         .then((data) => {
-            db.query('INSERT INTO role GROUP BY id SET ?', {
+            db.query('INSERT INTO role SET ?', {
                 id: data.newRoleId,
                 title: data.newRoleTitle,
                 salary: data.newRoleSalary,
@@ -206,7 +206,7 @@ const addEmployee = (roleChoices) => {
             },
             {
                 type: 'input',
-                message: "Please enter the employee of ID of the new employee's respective manager. (Enter 'null' if they will not have a manager)",
+                message: "Please enter the employee of ID of the new employee's respective manager.",
                 name: 'newEmpManager',
             }
         ])
