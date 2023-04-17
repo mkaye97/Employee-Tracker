@@ -1,7 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const consoleTable = require('console.table');
 
 const app = express();
 
@@ -27,7 +26,7 @@ const mainMenu = () => {
                 type: 'list',
                 message: 'Welcome to the employee management interface. Please select what you would like to do.',
                 name: 'options',
-                choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role']
+                choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role', 'Exit Employee Tracker']
             }
         ])
         .then((data) => {
@@ -43,23 +42,26 @@ const mainMenu = () => {
                 // Run a function that executes an employee Query
             } else if (data.options === 'Add a Department') {
                 addDepartment();
-                // Run a function that executes a department Query
-            } else if (data.options === 'Add a Role') {
-                deptOptions();
                 // Run a function that asks for the department info and inserts into the appropriate table
+            } else if (data.options === 'Add a Role') {
+                deptOptionsNewRole();
+                // Run a function that grabs department information, and calls a function which asks for the role info and inserts into the appropriate table
             } else if (data.options === 'Add an Employee') {
-                roleAndManagerOptions();
-                // Run a function that executes a department Query
+                roleOptionsNewEmp();
+                // Run a function that grabs role information, and calls a function which asks for the employee info and inserts into the appropriate table
             } else if (data.options === 'Update an Employee Role') {
-                console.log('Option 7');
-                // Run a function that executes a department Query
+                employeeOptionsUpdateEmp();
+                // Run a function that executes a department and role information, and calls a function which asks for the new role of the selected user.
+            } else if (data.options === 'Exit Employee Tracker') {
+                console.log("Thank you for using the employee tracker.");
+                // Exits Employee Tracker
             }
         }
         )
 };
 
 const viewAllDepartments = () => {
-    db.query('SELECT * FROM department', (err, res) => {
+    db.query('SELECT id AS Department_ID, name AS Department_Name FROM department ORDER BY id', (err, res) => {
         if (res) {
             console.log('\n');
             console.table(res);
@@ -74,7 +76,7 @@ const viewAllDepartments = () => {
 };
 
 const viewAllRoles = () => {
-    db.query('SELECT * FROM role', (err, res) => {
+    db.query('SELECT id AS Role_ID, title AS Job_Title, salary AS Salary_Divided_By_100K, department_id AS Department_ID FROM role GROUP BY id', (err, res) => {
         if (res) {
             console.log('\n');
             console.table(res);
@@ -89,7 +91,7 @@ const viewAllRoles = () => {
 };
 
 const viewAllEmployees = () => {
-    db.query('SELECT * FROM employee JOIN role ON employee.role_id = role.id', (err, res) => {
+    db.query('SELECT id AS Employee_ID, first_name AS First_Name, last_name AS Last_Name, role_id AS Role_ID, manager_id AS Manager_ID FROM employee GROUP BY id', (err, res) => {
         if (res) {
             console.log('\n');
             console.table(res);
@@ -97,7 +99,6 @@ const viewAllEmployees = () => {
             mainMenu();
         } else {
             console.log(err)
-            console.log("Use the 'Up' or 'Down' Arrow Key to Return to the main menu...");
             console.log('\n');
             mainMenu();
         }
@@ -123,8 +124,8 @@ const addDepartment = () => {
                     console.log('\n');
                     mainMenu();
                 } else {
+                    console.log('\n');
                     console.log(err);
-                    console.log("Use the 'Up' or 'Down' Arrow Key to Return to the main menu...");
                     console.log('\n');
                     mainMenu();
                 }
@@ -133,7 +134,6 @@ const addDepartment = () => {
 };
 
 const addRole = (departmentChoices) => {
-
     inquirer
         .prompt([
             {
@@ -159,7 +159,7 @@ const addRole = (departmentChoices) => {
             }
         ])
         .then((data) => {
-            db.query('INSERT INTO role SET ?', {
+            db.query('INSERT INTO role GROUP BY id SET ?', {
                 id: data.newRoleId,
                 title: data.newRoleTitle,
                 salary: data.newRoleSalary,
@@ -180,7 +180,7 @@ const addRole = (departmentChoices) => {
         })
 };
 
-const addEmployee = (roleChoices, managerChoices) => {
+const addEmployee = (roleChoices) => {
     inquirer
         .prompt([
             {
@@ -190,24 +190,23 @@ const addEmployee = (roleChoices, managerChoices) => {
             },
             {
                 type: 'input',
-                message: 'Please enter the title of the new role.',
+                message: "Please enter the new employee's first name.",
                 name: 'newEmpFirstName',
             },
             {
                 type: 'input',
-                message: 'Please enter the salary of employees holding this role.',
+                message: "Please enter the new employee's last name.",
                 name: 'newEmpLastName',
             },
             {
                 type: 'list',
-                message: 'Please enter the Department ID this role exists within.',
+                message: 'Please select the role of this employee.',
                 choices: roleChoices,
                 name: 'newEmpRole',
             },
             {
-                type: 'list',
-                message: 'Please enter the Department ID this role exists within.',
-                choices: managerChoices,
+                type: 'input',
+                message: "Please enter the employee of ID of the new employee's respective manager. (Enter 'null' if they will not have a manager)",
                 name: 'newEmpManager',
             }
         ])
@@ -234,11 +233,43 @@ const addEmployee = (roleChoices, managerChoices) => {
         })
 };
 
-// function updateRole = () => {
+const updateEmployeeRole = (empChoices, roleChoices) => {
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                message: 'Please select the employee you would like to update.',
+                choices: empChoices,
+                name: 'updEmpId',
+            },
+            {
+                type: 'list',
+                message: 'Please select the role of this employee.',
+                choices: roleChoices,
+                name: 'updEmpRole',
+            }
+        ])
+        .then((data) => {
+            console.log(data.updEmpRole);
+            db.query(`UPDATE employee SET ? WHERE id = ${data.updEmpId}`, {
+                role_id: data.updEmpRole
+            }, (err, res) => {
+                if (res) {
+                    console.log('\n');
+                    console.log("Successfully updated the employee's role in the database!");
+                    console.log('\n');
+                    mainMenu();
+                } else {
+                    console.log('\n');
+                    console.log(err);
+                    console.log('\n');
+                    mainMenu();
+                }
+            });
+        })
+};
 
-// };
-
-const deptOptions = () => {
+const deptOptionsNewRole = () => {
     db.query('SELECT * FROM department', (err, res) => {
         if (res) {
             const depts = res.map(({ id, name }) => ({
@@ -253,35 +284,50 @@ const deptOptions = () => {
     })
 };
 
-const roleAndManagerOptions = () => {
-    let roles;
-    let employees;
+const roleOptionsNewEmp = () => {
     db.query('SELECT * FROM role', (err, res) => {
         if (res) {
-            roles = res.map(({ id, title }) => ({
+            let roles = res.map(({ id, title }) => ({
                 name: title,
                 value: id
             }));
+            addEmployee(roles);
         } else {
             console.log(err);
 
             mainMenu()
         }
     })
+};
 
+const employeeOptionsUpdateEmp = () => {
     db.query('SELECT * FROM employee', (err, res) => {
         if (res) {
-            employees = res.map(({ id, first_name, last_name }) => ({
+            const emps = res.map(({ id, first_name, last_name }) => ({
                 name: `${last_name}, ${first_name}`,
                 value: id
             }));
+            roleOptionsUpdateEmp(emps);
         } else {
             console.log(err);
-            console.log('\n');
             mainMenu()
         }
     })
-    addEmployee(roles, employees);
+};
+
+const roleOptionsUpdateEmp = (empOptions) => {
+    db.query('SELECT * FROM role', (err, res) => {
+        if (res) {
+            const roles = res.map(({ id, title }) => ({
+                name: title,
+                value: id
+            }));
+            updateEmployeeRole(empOptions, roles);
+        } else {
+            console.log(err);
+            mainMenu()
+        }
+    })
 };
 
 mainMenu();

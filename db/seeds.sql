@@ -13,11 +13,11 @@ VALUES (1, "Engineer", 1.40, 1),
        (3, "Accountant", 1.13, 3),
        (4, "CS Rep", 1.32, 4),
        (5, "HR Rep", 1.13, 5),
-       (6, "Project Manager", 1.40, 1),
-       (7, "Marketing Manager", 1.01, 2),
+       (6, "Senior Engineer", 1.40, 1),
+       (7, "Senior Marketing Rep", 1.01, 2),
        (8, "Controller", 1.13, 3),
-       (9, "Customer Service Manager", 1.32, 4),
-       (10, "Human Resources Manager", 1.13, 5);
+       (9, "Senior Customer Service Rep", 1.32, 4),
+       (10, "Senior Human Resources Rep", 1.13, 5);
 
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
 VALUES (926, "Cloe", "Nioclas", 6, NULL),
