@@ -1,5 +1,9 @@
 # Employee-Tracker
 
+## Description
+
+This application serves as a very high level, simple tracker that a company could use to manage their employees and their relevant information. While this application is basic there are many ways that it could fit a companies needs. For example contact information could be inserted for each employee, or for a department. You could also implement a table that includes teams and this information could be linked back to the other tables like the "employee" table.
+
 ## User Story
 ```md
 AS A business owner
@@ -27,3 +31,7 @@ THEN I am prompted to enter the employee’s first name, last name, role, and ma
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 ```
+
+## Video Walkthrough Link
+
+https://drive.google.com/file/d/1Z35dWg6mF0T9YvkfwnqIXZeiQYxzuZYv/view
